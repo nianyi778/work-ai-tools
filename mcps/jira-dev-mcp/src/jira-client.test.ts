@@ -51,7 +51,7 @@ describe('jira-client integration', () => {
   it('searchIssues returns paginated issue summaries', async () => {
     global.fetch = vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
-      expect(url).toContain('/rest/api/3/search?');
+      expect(url).toContain('/rest/api/3/search/jql?');
       expect(url).toContain('text+%7E+%22login+bug%22');
       return jsonResponse({
         startAt: 0,
