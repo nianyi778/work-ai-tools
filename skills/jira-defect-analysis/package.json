@@ -1,0 +1,16 @@
+{
+  "name": "@nianyi778/skill-jira-defect-analysis",
+  "version": "1.0.0",
+  "description": "Analyzes software defects by cross-referencing Jira issues with source code, classifying root causes, and backfilling results into a Google Sheet management table.",
+  "keywords": [
+    "agent-skill",
+    "claude-skill",
+    "jira",
+    "defect-analysis",
+    "bug-triage"
+  ],
+  "files": [
+    "skills/"
+  ],
+  "license": "MIT"
+}

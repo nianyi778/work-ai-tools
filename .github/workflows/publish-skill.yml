@@ -1,0 +1,39 @@
+name: Publish skill to npm
+
+on:
+  push:
+    tags:
+      - 'skill-*-v*'   # e.g. skill-jira-defect-analysis-v1.0.1
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract skill name from tag
+        id: meta
+        run: |
+          TAG="${GITHUB_REF_NAME}"                        # skill-jira-defect-analysis-v1.0.1
+          WITHOUT_PREFIX="${TAG#skill-}"                  # jira-defect-analysis-v1.0.1
+          SKILL_NAME="${WITHOUT_PREFIX%-v*}"              # jira-defect-analysis
+          VERSION="${WITHOUT_PREFIX##*-v}"                # 1.0.1
+          echo "skill=$SKILL_NAME" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Bump version in package.json
+        working-directory: skills/${{ steps.meta.outputs.skill }}
+        run: npm version ${{ steps.meta.outputs.version }} --no-git-tag-version
+
+      - name: Publish to npm
+        working-directory: skills/${{ steps.meta.outputs.skill }}
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

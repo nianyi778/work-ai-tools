@@ -1,9 +1,13 @@
-name: Publish to npm
+name: Publish jira-dev-mcp to npm
 
 on:
   push:
     tags:
-      - 'v*'
+      - 'jira-dev-mcp-v*'
+
+defaults:
+  run:
+    working-directory: mcps/jira-dev-mcp
 
 jobs:
   publish:

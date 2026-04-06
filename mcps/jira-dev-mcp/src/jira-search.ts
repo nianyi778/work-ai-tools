@@ -30,7 +30,7 @@ export async function searchIssues(config: ResolvedConfig, input: SearchIssuesIn
     jql, startAt: String(startAt), maxResults: String(maxResults),
     fields: 'summary,status,assignee,issuetype,parent',
   });
-  const data = await jiraRequest<JiraSearchResponse>(config, `/rest/api/3/search?${params.toString()}`);
+  const data = await jiraRequest<JiraSearchResponse>(config, `/rest/api/3/search/jql?${params.toString()}`);
   return { query: jql, startAt: data.startAt, maxResults: data.maxResults, total: data.total, issues: data.issues.map(mapIssueSummary) };
 }
 
