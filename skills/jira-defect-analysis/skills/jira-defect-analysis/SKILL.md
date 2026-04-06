@@ -111,13 +111,14 @@ description: Analyzes software defects by cross-referencing Jira issues with sou
   },
   "backfill": {
     "columns": {
-      "N": {"name": "発生原因", "candidates": ["不具合", "仕様変更", "設計漏れ", "その他"]},
-      "O": {"name": "解決方法", "candidates": ["修正", "追加開発", "設定変更", "対応不要"]},
-      "P": {"name": "処置区分", "candidates": ["BUG修正", "仕様変更", "文言修正", "その他"]},
-      "Q": {"name": "不具合区分", "candidates": ["IF誤り", "記述誤り", "仕様不備", "その他"]},
-      "R": {"name": "作り込み工程", "candidates": ["要件定義", "設計", "実装", "その他"]},
-      "S": {"name": "発見すべき工程", "candidates": ["設計レビュー", "単体テスト", "結合テスト", "その他"]}
+      "?": {"name": "発生原因", "candidates": ["不具合", "仕様変更", "設計漏れ", "その他"]},
+      "?": {"name": "解決方法", "candidates": ["修正", "追加開発", "設定変更", "対応不要"]},
+      "?": {"name": "処置区分", "candidates": ["BUG修正", "仕様変更", "文言修正", "その他"]},
+      "?": {"name": "不具合区分", "candidates": ["IF誤り", "記述誤り", "仕様不備", "その他"]},
+      "?": {"name": "作り込み工程", "candidates": ["要件定義", "設計", "実装", "その他"]},
+      "?": {"name": "発見すべき工程", "candidates": ["設計レビュー", "単体テスト", "結合テスト", "その他"]}
     },
+    "_column_resolution": "列号在Step1从Sheet表头动态解析，解析成功后覆盖'?'并保存到配置。",
     "analysis_column": "AF",
     "analysis_format": "詳細発生原因：{cause}\n詳細対応方法：{solution}\n詳細影響範囲：{scope}",
     "colors": {"done": "#90EE90", "on_hold": "#FFFACD"}
@@ -138,6 +139,9 @@ Step 1 Checklist:
 - [ ] 加载 /tmp/defect-config.json
 - [ ] 获取 Jira 凭证
 - [ ] 搜索 Google Sheet（如 spreadsheet_id=auto）
+- [ ] 读取表头行（header_row），解析列名→列号映射
+- [ ] 对 backfill.columns 中每个 "?" 列，按 name 匹配表头，找到后更新列号并保存配置
+- [ ] 匹配不到的列 → 问用户："「{name}」列が見つかりませんでした。列番号を教えてください（例：Q）"
 - [ ] 读取管理编号列，建立编号→行号映射
 - [ ] 搜索 Jira 获取我名下的所有 Issue
 - [ ] 交叉比对：哪些已有分析结论（跳过），哪些待处理
