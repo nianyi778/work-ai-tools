@@ -1,0 +1,59 @@
+{
+  "name": "jira-dev-mcp",
+  "version": "1.4.5",
+  "description": "Local MCP server for Jira Cloud-driven development workflows",
+  "type": "module",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=18.3.0"
+  },
+  "bin": {
+    "jira-dev": "dist/cli.js",
+    "jira-mcp-server": "dist/index.js",
+    "jira-mcp-login": "dist/login.js"
+  },
+  "files": [
+    "dist",
+    "scripts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "generate-defaults": "node scripts/generate-defaults.js",
+    "prebuild": "npm run generate-defaults",
+    "build": "npm run prebuild && tsc",
+    "build:watch": "tsc --watch",
+    "start": "node dist/index.js",
+    "login": "node dist/login.js",
+    "test": "npm run generate-defaults && vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "npm run generate-defaults && vitest run --coverage",
+    "prepublishOnly": "npm test && npm run build"
+  },
+  "keywords": [
+    "jira",
+    "mcp",
+    "model-context-protocol",
+    "developer-tools"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nianyi778/jira-dev-mcp.git"
+  },
+  "homepage": "https://github.com/nianyi778/jira-dev-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/nianyi778/jira-dev-mcp/issues"
+  },
+  "author": "nianyi778",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^4.0.18",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}

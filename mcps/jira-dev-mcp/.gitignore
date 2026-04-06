@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+coverage/
+.tmp/
+.env
+.env.local
+*.dev.vars
+src/defaults.ts

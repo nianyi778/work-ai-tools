@@ -1,0 +1,6 @@
+// Built-in OAuth 2.0 app credentials for jira-dev-mcp
+// This file is generated at build time — do NOT commit src/defaults.ts
+// Users can override these via JIRA_CLIENT_ID / JIRA_CLIENT_SECRET env vars
+
+export const BUILTIN_CLIENT_ID = '__JIRA_CLIENT_ID__';
+export const BUILTIN_CLIENT_SECRET = '__JIRA_CLIENT_SECRET__';

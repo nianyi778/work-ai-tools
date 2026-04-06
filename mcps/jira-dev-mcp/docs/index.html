@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jira-dev-mcp — Connect Your AI Coding Assistant to Jira Cloud</title>
+<meta name="description" content="One MCP server. Nine tools. Zero context switching. Connect Claude Code, OpenCode, Codex, and any MCP client to Jira Cloud for seamless AI-driven development.">
+<meta property="og:title" content="jira-dev-mcp — AI meets Jira Cloud">
+<meta property="og:description" content="One MCP server. Nine tools. Zero context switching. Search issues, read tasks, parse attachments, and post comments — all from your AI coding assistant.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nianyi778.github.io/jira-dev-mcp/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="jira-dev-mcp — AI meets Jira Cloud">
+<meta name="twitter:description" content="One MCP server. Nine tools. Zero context switching.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050508;--surface:#0b0d14;--raised:#11141e;--border:rgba(255,255,255,.06);
+  --border-h:rgba(255,255,255,.12);--text:#eef1f8;--text-m:#6d7593;--text-dim:#454d68;
+  --accent:#10b981;--accent-h:#34d399;--accent-glow:rgba(16,185,129,.12);
+  --blue:#3b82f6;--blue-glow:rgba(59,130,246,.1);
+  --font:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'SF Mono','Cascadia Code','Fira Code',Menlo,Consolas,monospace;
+  --max:1120px;--r:10px;--r-lg:16px;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* ─── Grid bg ─── */
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(rgba(255,255,255,.025) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;z-index:0}
+
+/* ─── Layout ─── */
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px;position:relative;z-index:1}
+section{padding:100px 0}
+
+/* ─── Nav ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);background:rgba(5,5,8,.7);border-bottom:1px solid var(--border)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:-.02em}
+.nav-brand .logo-icon{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--accent),var(--blue));box-shadow:0 0 16px rgba(16,185,129,.3);font-size:14px;line-height:1}
+.nav-brand .logo-text span{background:linear-gradient(135deg,var(--accent-h),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-gh{display:inline-flex;align-items:center;gap:7px;padding:7px 16px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;transition:all .2s}
+.nav-gh:hover{background:rgba(255,255,255,.1);border-color:var(--border-h)}
+.nav-gh svg{width:16px;height:16px;fill:currentColor}
+
+/* ─── Hero ─── */
+#hero{padding:160px 0 80px;text-align:center;position:relative}
+.hero-glow{position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse at center,rgba(16,185,129,.08) 0%,rgba(59,130,246,.04) 40%,transparent 70%);pointer-events:none;z-index:0}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:var(--accent-glow);border:1px solid rgba(16,185,129,.2);border-radius:100px;font-size:13px;color:var(--accent);margin-bottom:28px;font-weight:500}
+.hero-tag span{font-family:var(--mono);font-size:12px}
+h1{font-size:clamp(34px,5.5vw,64px);font-weight:800;line-height:1.08;letter-spacing:-.035em;margin-bottom:20px;background:linear-gradient(to bottom,#fff 30%,#8892a8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(17px,2.2vw,21px);color:var(--text-m);max-width:540px;margin:0 auto 36px;line-height:1.5}
+.hero-sub strong{color:var(--text);font-weight:600}
+
+/* Install cmd */
+.install-cmd{display:inline-flex;align-items:center;gap:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:28px;overflow:hidden;font-family:var(--mono);font-size:14px}
+.install-cmd code{padding:12px 16px;color:var(--accent-h);white-space:nowrap}
+.install-cmd code .dim{color:var(--text-dim)}
+.install-cmd button{padding:12px 16px;background:none;border:none;border-left:1px solid var(--border);color:var(--text-m);cursor:pointer;font-family:var(--font);font-size:13px;transition:all .2s;display:flex;align-items:center;gap:5px}
+.install-cmd button:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.install-cmd button.copied{color:var(--accent)}
+
+/* Buttons */
+.btn-row{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:var(--r);font-size:15px;font-weight:600;transition:all .25s;cursor:pointer;border:none;font-family:var(--font)}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 0 20px var(--accent-glow),0 2px 8px rgba(0,0,0,.3)}
+.btn-primary:hover{background:var(--accent-h);box-shadow:0 0 32px rgba(16,185,129,.2),0 4px 12px rgba(0,0,0,.3);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);padding:12px 24px}
+.btn-ghost:hover{border-color:var(--border-h);background:rgba(255,255,255,.04)}
+.btn svg{width:18px;height:18px;fill:currentColor}
+
+/* Badges */
+.badges{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:48px}
+.badges img{height:22px;border-radius:4px}
+
+/* Terminal */
+.terminal{max-width:640px;margin:0 auto;background:#0c0e16;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;text-align:left;box-shadow:0 24px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.03)}
+.terminal-bar{display:flex;align-items:center;gap:7px;padding:13px 18px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border)}
+.terminal-dot{width:11px;height:11px;border-radius:50%}
+.terminal-dot:nth-child(1){background:#f5655b}
+.terminal-dot:nth-child(2){background:#f7c035}
+.terminal-dot:nth-child(3){background:#3cc842}
+.terminal-title{margin-left:auto;font-size:12px;color:var(--text-dim);font-family:var(--mono)}
+.terminal-body{padding:20px;font-family:var(--mono);font-size:13px;line-height:1.7;min-height:280px}
+.terminal-body .line{opacity:0;transform:translateY(6px);animation:t-line .35s ease forwards}
+.terminal-body .line.blank{height:10px}
+.terminal-body .prompt{color:var(--text-dim)}
+.terminal-body .cmd{color:var(--text)}
+.terminal-body .fn{color:var(--blue)}
+.terminal-body .str{color:#f59e0b}
+.terminal-body .ok{color:var(--accent)}
+.terminal-body .h{color:#f0f2f5;font-weight:700}
+.terminal-body .meta{color:var(--text-m)}
+.terminal-body .point{color:var(--accent)}
+.terminal-body .cursor{display:inline-block;width:8px;height:16px;background:var(--accent);vertical-align:text-bottom;animation:blink 1s step-end infinite;margin-left:2px;border-radius:1px}
+@keyframes t-line{to{opacity:1;transform:translateY(0)}}
+@keyframes blink{50%{opacity:0}}
+
+/* ─── Works With ─── */
+#works-with{padding:40px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(16,185,129,.015) 0%,transparent 100%)}
+.ww-label{text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);margin-bottom:24px;font-weight:600}
+.ww-logos{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap}
+.ww-item{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:var(--text-m);transition:color .2s}
+.ww-item:hover{color:var(--text)}
+.ww-icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--raised);border:1px solid var(--border);border-radius:var(--r);font-size:18px}
+
+/* ─── Features ─── */
+#features{background:linear-gradient(180deg,transparent,rgba(16,185,129,.01) 50%,transparent)}
+.section-label{text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:12px;font-weight:600}
+.section-title{text-align:center;font-size:clamp(26px,3.5vw,40px);font-weight:800;letter-spacing:-.03em;margin-bottom:16px}
+.section-sub{text-align:center;color:var(--text-m);max-width:480px;margin:0 auto 56px;font-size:16px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.f-card{padding:28px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);transition:all .3s;cursor:default}
+.f-card:hover{border-color:var(--border-h);background:var(--raised);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.25)}
+.f-icon{font-size:24px;margin-bottom:14px;display:block}
+.f-card h3{font-size:16px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+.f-card p{font-size:14px;color:var(--text-m);line-height:1.55}
+
+/* ─── How It Works ─── */
+#how-it-works .section-title{margin-bottom:56px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative}
+.steps::before{content:'';position:absolute;top:28px;left:calc(16.66% + 28px);right:calc(16.66% + 28px);height:2px;background:linear-gradient(90deg,var(--accent),var(--blue),var(--accent));opacity:.3;border-radius:2px}
+.step{text-align:center;position:relative;padding:0 20px}
+.step-num{width:56px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--surface);border:2px solid var(--accent);color:var(--accent);font-size:20px;font-weight:800;margin:0 auto 20px;position:relative;z-index:1;box-shadow:0 0 24px var(--accent-glow)}
+.step h3{font-size:15px;font-weight:700;margin-bottom:8px}
+.step code{display:inline-block;font-family:var(--mono);font-size:12px;background:var(--surface);border:1px solid var(--border);padding:4px 10px;border-radius:6px;color:var(--accent-h);margin-top:4px}
+.step p{font-size:13px;color:var(--text-m);margin-top:8px;line-height:1.5}
+
+/* ─── Quickstart ─── */
+#quickstart{background:linear-gradient(180deg,transparent,rgba(16,185,129,.015) 50%,transparent)}
+#quickstart .section-title{margin-bottom:40px}
+.qs-block{max-width:600px;margin:0 auto;background:#0c0e16;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:0 16px 64px rgba(0,0,0,.4)}
+.qs-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border)}
+.qs-header span{font-size:12px;color:var(--text-dim);font-family:var(--mono)}
+.qs-header button{padding:4px 12px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;color:var(--text-m);cursor:pointer;font-size:12px;font-family:var(--font);transition:all .2s}
+.qs-header button:hover{color:var(--text);background:rgba(255,255,255,.1)}
+.qs-header button.copied{color:var(--accent)}
+.qs-code{padding:20px;font-family:var(--mono);font-size:13.5px;line-height:2}
+.qs-code .comment{color:var(--text-dim)}
+.qs-code .prompt{color:var(--text-dim)}
+.qs-code .cmd{color:var(--text)}
+.qs-code .flag{color:var(--accent-h)}
+.qs-code .pkg{color:#f59e0b}
+
+/* ─── CTA ─── */
+#cta{text-align:center;position:relative}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(16,185,129,.06) 0%,transparent 70%);pointer-events:none}
+#cta h2{font-size:clamp(24px,3.5vw,38px);font-weight:800;letter-spacing:-.03em;margin-bottom:16px}
+#cta p{color:var(--text-m);margin-bottom:32px;font-size:17px}
+.btn-lg{padding:16px 36px;font-size:17px;border-radius:12px}
+
+/* ─── Footer ─── */
+footer{padding:32px 0;border-top:1px solid var(--border);text-align:center;font-size:13px;color:var(--text-dim)}
+footer a{color:var(--text-m);transition:color .2s}
+footer a:hover{color:var(--accent)}
+.footer-links{display:flex;align-items:center;justify-content:center;gap:8px}
+.footer-links .sep{opacity:.3}
+
+/* ─── Fade-in ─── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ─── Responsive ─── */
+@media(max-width:768px){
+  section{padding:72px 0}
+  #hero{padding:120px 0 60px}
+  h1{font-size:32px}
+  .features-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr;gap:40px}
+  .steps::before{display:none}
+  .ww-logos{gap:20px}
+  .ww-item{font-size:13px}
+  .ww-icon{width:32px;height:32px;font-size:16px}
+  .terminal-body{font-size:11.5px;padding:14px;min-height:220px}
+  .btn-row{flex-direction:column;gap:10px}
+  .btn{width:100%;justify-content:center}
+}
+@media(max-width:480px){
+  .install-cmd{flex-direction:column;width:100%}
+  .install-cmd button{border-left:none;border-top:1px solid var(--border);width:100%;justify-content:center;padding:10px}
+  .ww-logos{flex-direction:column;gap:14px}
+  .badges{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="wrap">
+  <a href="#" class="nav-brand"><span class="logo-icon">⚡</span><span class="logo-text"><span>jira-dev</span>-mcp</span></a>
+  <a href="https://github.com/nianyi778/jira-dev-mcp" class="nav-gh" target="_blank" rel="noopener">
+    <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    Star on GitHub
+  </a>
+</div>
+</nav>
+
+<main>
+
+<section id="hero">
+<div class="hero-glow"></div>
+<div class="wrap">
+  <div class="hero-tag">
+    <span>v1.3.0</span>
+    Open Source MCP Server
+  </div>
+
+  <h1>Connect your AI coding<br>assistant to Jira Cloud</h1>
+  <p class="hero-sub"><strong>One MCP server. Nine tools. Zero context switching.</strong><br>Search, read, analyze, and comment on Jira issues — directly from your AI editor.</p>
+
+  <div class="install-cmd">
+    <code><span class="dim">$</span> npm install -g jira-dev-mcp</code>
+    <button onclick="copyCmd(this,'npm install -g jira-dev-mcp')">Copy</button>
+  </div>
+
+  <div class="btn-row">
+    <a href="https://github.com/nianyi778/jira-dev-mcp" class="btn btn-primary" target="_blank" rel="noopener">
+      <svg viewBox="0 0 16 16"><path d="M8 .2l2.2 4.5 4.9.7-3.5 3.5.8 4.9L8 11.4l-4.4 2.4.8-4.9L1 5.4l4.9-.7z"/></svg>
+      Star on GitHub
+    </a>
+    <a href="#quickstart" class="btn btn-ghost">Get Started →</a>
+  </div>
+
+  <div class="badges">
+    <img src="https://img.shields.io/npm/v/jira-dev-mcp.svg?style=flat-square&color=10b981&label=npm" alt="npm version" width="100" height="22" loading="lazy">
+    <img src="https://img.shields.io/github/stars/nianyi778/jira-dev-mcp.svg?style=flat-square&color=3b82f6&label=stars" alt="GitHub stars" width="90" height="22" loading="lazy">
+    <img src="https://img.shields.io/badge/license-MIT-6d7593.svg?style=flat-square" alt="MIT License" width="80" height="22" loading="lazy">
+  </div>
+
+  <div class="terminal reveal">
+    <div class="terminal-bar">
+      <span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span>
+      <span class="terminal-title">jira-dev — zsh</span>
+    </div>
+    <div class="terminal-body" id="term">
+      <div class="line" style="animation-delay:.1s"><span class="prompt">$ </span><span class="cmd">jira-dev login</span></div>
+      <div class="line" style="animation-delay:.7s"><span class="ok">✓</span> Logged in to <span class="h">MyCompany</span></div>
+      <div class="line blank" style="animation-delay:1s"></div>
+      <div class="line" style="animation-delay:1.2s"><span class="prompt">$ </span><span class="fn">jira_analyze_task</span>(<span class="meta">input:</span> <span class="str">"AT-456"</span>)</div>
+      <div class="line blank" style="animation-delay:1.6s"></div>
+      <div class="line" style="animation-delay:1.9s"><span class="h"># Task Analysis: AT-456 — Login timeout on mobile</span></div>
+      <div class="line" style="animation-delay:2.2s"><span class="meta"><b>Type</b>: Bug &nbsp;|&nbsp; <b>Priority</b>: High &nbsp;|&nbsp; <b>Assignee</b>: @kai</span></div>
+      <div class="line blank" style="animation-delay:2.5s"></div>
+      <div class="line" style="animation-delay:2.7s"><span class="point">■</span> <span class="meta">Root Cause: Session TTL set to 5min, mobile reconnect takes 8min</span></div>
+      <div class="line" style="animation-delay:3.0s"><span class="point">■</span> <span class="meta">Fix: Extend TTL to 30min for mobile user-agent</span></div>
+      <div class="line" style="animation-delay:3.3s"><span class="point">■</span> <span class="meta">Impact: Low risk, auth module only</span></div>
+      <div class="line blank" style="animation-delay:3.5s"></div>
+      <div class="line" style="animation-delay:3.7s"><span class="ok">✓</span> Analysis posted as comment on <span class="fn">AT-456</span><span class="cursor"></span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="works-with">
+<div class="wrap">
+  <div class="ww-label">Works with any MCP client</div>
+  <div class="ww-logos">
+    <div class="ww-item"><span class="ww-icon">✦</span>Claude Code</div>
+    <div class="ww-item"><span class="ww-icon">⌘</span>OpenCode</div>
+    <div class="ww-item"><span class="ww-icon">◈</span>Codex</div>
+    <div class="ww-item"><span class="ww-icon">⚙</span>Any MCP Client</div>
+  </div>
+</div>
+</section>
+
+<section id="features">
+<div class="wrap">
+  <div class="section-label reveal">Features</div>
+  <h2 class="section-title reveal">Nine tools, one install</h2>
+  <p class="section-sub reveal">Every Jira workflow your AI assistant needs — from search to analysis — accessible via the Model Context Protocol.</p>
+
+  <div class="features-grid">
+    <div class="f-card reveal"><span class="f-icon">🔍</span><h3>Search Issues</h3><p>Natural language queries or raw JQL. Find any issue instantly from your AI assistant.</p></div>
+    <div class="f-card reveal"><span class="f-icon">📋</span><h3>Read Task Details</h3><p>Full description, subtasks, changelog, comments, and attachment list — all in one call.</p></div>
+    <div class="f-card reveal"><span class="f-icon">📎</span><h3>Parse Attachments</h3><p>Download and parse CSV, XLSX, XLS, and PDF files. Images returned as base64 for AI analysis.</p></div>
+    <div class="f-card reveal"><span class="f-icon">🔐</span><h3>OAuth 2.0 Login</h3><p>Browser-based authorization. Tokens auto-refresh. No manual Client ID or Secret needed.</p></div>
+    <div class="f-card reveal"><span class="f-icon">💬</span><h3>Post &amp; Edit Comments</h3><p>Add or edit comments with confirmation prompt. Auto-send mode available for CI workflows.</p></div>
+    <div class="f-card reveal"><span class="f-icon">🔄</span><h3>Smart Retry</h3><p>Handles 429 and 503 with Retry-After headers and exponential backoff. Bulletproof API calls.</p></div>
+    <div class="f-card reveal"><span class="f-icon">🧪</span><h3>Analysis Workflow</h3><p>Type-aware templates for Bug, Story, and Task. Full SOP: explore → plan → implement → comment.</p></div>
+    <div class="f-card reveal"><span class="f-icon">🗺️</span><h3>Project Mapping</h3><p>Map Jira project keys to local repo paths. Your AI always knows where to look.</p></div>
+    <div class="f-card reveal"><span class="f-icon">⚡</span><h3>Zero Bloat</h3><p>Only MCP SDK + Zod. No heavyweight dependencies. Fast startup, minimal footprint.</p></div>
+  </div>
+</div>
+</section>
+
+<section id="how-it-works">
+<div class="wrap">
+  <div class="section-label reveal">Setup</div>
+  <h2 class="section-title reveal">Up and running in 60 seconds</h2>
+
+  <div class="steps reveal">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Install</h3>
+      <code>npm i -g jira-dev-mcp</code>
+      <p>Single global install. Node 18+ required.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Login</h3>
+      <code>jira-dev login</code>
+      <p>Browser opens, authorize, done. Tokens auto-refresh.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Use</h3>
+      <code>jira-dev setup</code>
+      <p>Registers 9 MCP tools into your AI assistant config.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="quickstart">
+<div class="wrap">
+  <div class="section-label reveal">Quick Start</div>
+  <h2 class="section-title reveal">Three commands to Jira-powered AI</h2>
+
+  <div class="qs-block reveal">
+    <div class="qs-header">
+      <span>Terminal</span>
+      <button onclick="copyBlock(this)">Copy</button>
+    </div>
+    <div class="qs-code">
+      <div><span class="comment"># Install globally</span></div>
+      <div><span class="prompt">$ </span><span class="cmd">npm install</span> <span class="flag">-g</span> <span class="pkg">jira-dev-mcp</span></div>
+      <div>&nbsp;</div>
+      <div><span class="comment"># Login to Jira (opens browser)</span></div>
+      <div><span class="prompt">$ </span><span class="cmd">jira-dev login</span></div>
+      <div>&nbsp;</div>
+      <div><span class="comment"># Register with your AI assistant</span></div>
+      <div><span class="prompt">$ </span><span class="cmd">jira-dev setup</span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="cta">
+<div class="cta-glow"></div>
+<div class="wrap reveal">
+  <h2>Ready to stop copy‑pasting<br>Jira tickets?</h2>
+  <p>Give your AI assistant direct access to your entire Jira workspace.</p>
+  <a href="https://github.com/nianyi778/jira-dev-mcp" class="btn btn-primary btn-lg" target="_blank" rel="noopener">
+    <svg viewBox="0 0 16 16" style="width:20px;height:20px"><path d="M8 .2l2.2 4.5 4.9.7-3.5 3.5.8 4.9L8 11.4l-4.4 2.4.8-4.9L1 5.4l4.9-.7z"/></svg>
+    Star on GitHub
+  </a>
+</div>
+</section>
+
+</main>
+
+<footer>
+<div class="wrap">
+  <div class="footer-links">
+    <a href="https://github.com/nianyi778/jira-dev-mcp/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+    <span class="sep">·</span>
+    <a href="https://github.com/nianyi778/jira-dev-mcp" target="_blank" rel="noopener">GitHub</a>
+    <span class="sep">·</span>
+    <a href="https://www.npmjs.com/package/jira-dev-mcp" target="_blank" rel="noopener">npm</a>
+  </div>
+</div>
+</footer>
+
+<script>
+(function(){
+  var i,obs,els;
+  obs=new IntersectionObserver(function(es){
+    var j;
+    for(j=0;j<es.length;j++){
+      if(es[j].isIntersecting){es[j].target.classList.add('visible');obs.unobserve(es[j].target)}
+    }
+  },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  els=document.querySelectorAll('.reveal');
+  for(i=0;i<els.length;i++){obs.observe(els[i])}
+})();
+
+function copyCmd(btn,t){
+  navigator.clipboard.writeText(t).then(function(){
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied')},1800);
+  });
+}
+
+function copyBlock(btn){
+  var t='npm install -g jira-dev-mcp\njira-dev login\njira-dev setup';
+  navigator.clipboard.writeText(t).then(function(){
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied')},1800);
+  });
+}
+</script>
+</body>
+</html>
