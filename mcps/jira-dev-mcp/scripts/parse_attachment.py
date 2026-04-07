@@ -1,10 +1,30 @@
 #!/usr/bin/env python3
 import csv
 import json
+import subprocess
 import sys
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree
+
+
+def ensure_package(package: str, import_name: str | None = None) -> bool:
+    """Auto-install a pip package if not available. Returns True if usable."""
+    name = import_name or package
+    try:
+        __import__(name)
+        return True
+    except ImportError:
+        try:
+            subprocess.check_call(
+                [sys.executable, "-m", "pip", "install", "--quiet", package],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            __import__(name)
+            return True
+        except Exception:
+            return False
 
 MAX_ROWS = 500
 MAX_CHARS = 50000
@@ -124,11 +144,10 @@ def parse_xlsx_file(path: Path) -> None:
 
 
 def parse_xls_file(path: Path) -> None:
-    try:
-        import xlrd  # type: ignore
-    except ImportError:
-        emit_error("xlrd is required to parse .xls files")
+    if not ensure_package("xlrd"):
+        emit_error("xlrd is required to parse .xls files and could not be installed")
         return
+    import xlrd  # type: ignore  # noqa: PLC0415
 
     workbook = xlrd.open_workbook(path)
     lines: list[str] = []
@@ -154,11 +173,10 @@ def parse_xls_file(path: Path) -> None:
 
 
 def parse_pdf_file(path: Path) -> None:
-    try:
-        import pdfplumber  # type: ignore
-    except ImportError:
-        emit_error("pdfplumber is required to parse PDF files")
+    if not ensure_package("pdfplumber"):
+        emit_error("pdfplumber is required to parse PDF files and could not be installed")
         return
+    import pdfplumber  # type: ignore  # noqa: PLC0415
 
     pages: list[str] = []
     with pdfplumber.open(path) as pdf:

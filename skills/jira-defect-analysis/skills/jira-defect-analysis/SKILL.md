@@ -21,6 +21,14 @@ description: Analyzes software defects by cross-referencing Jira issues with sou
 
 ### Step 0: 初始化（每个项目首次使用）
 
+**首先自动检查并安装 Python 依赖**（每次 session 开始时执行一次）：
+
+```bash
+python3 -c "import openpyxl" 2>/dev/null || pip install --quiet openpyxl
+python3 -c "import xlrd" 2>/dev/null || pip install --quiet xlrd
+python3 -c "import pdfplumber" 2>/dev/null || pip install --quiet pdfplumber
+```
+
 检查 `/tmp/defect-config.json` 是否存在。**如果不存在，交互采集以下信息**：
 
 ```
