@@ -27,8 +27,7 @@
 **安装**（一次性）：
 
 ```bash
-npm install -g jira-dev-mcp
-jira-dev login   # 浏览器授权，token 自动管理
+npx jira-dev-mcp login   # 浏览器授权，token 自动管理
 ```
 
 **在 Claude Code 里配置**（`~/.claude/claude_desktop_config.json`）：
@@ -37,12 +36,14 @@ jira-dev login   # 浏览器授权，token 自动管理
 {
   "mcpServers": {
     "jira": {
-      "command": "jira-dev",
-      "args": ["mcp"]
+      "command": "npx",
+      "args": ["-y", "jira-dev-mcp", "mcp"]
     }
   }
 }
 ```
+
+> 使用 `npx -y` 无需手动安装，每次启动自动拉取最新版本。
 
 **能做什么**：
 
@@ -186,9 +187,8 @@ npx skills add @nianyi778/skill-jira-defect-analysis
 ## 六、快速上手（5 分钟）
 
 ```bash
-# Step 1: 安装 MCP
-npm install -g jira-dev-mcp
-jira-dev login
+# Step 1: 登录 MCP（无需全局安装）
+npx jira-dev-mcp login
 
 # Step 2: 安装 Skill
 npx skills add @nianyi778/skill-jira-defect-analysis
