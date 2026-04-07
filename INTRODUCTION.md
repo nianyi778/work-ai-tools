@@ -27,23 +27,11 @@
 **安装**（一次性）：
 
 ```bash
+npx jira-dev-mcp setup   # 自动注册到 Claude Code / OpenCode，无需手动改配置文件
 npx jira-dev-mcp login   # 浏览器授权，token 自动管理
 ```
 
-**在 Claude Code 里配置**（`~/.claude/claude_desktop_config.json`）：
-
-```json
-{
-  "mcpServers": {
-    "jira": {
-      "command": "npx",
-      "args": ["-y", "jira-dev-mcp", "mcp"]
-    }
-  }
-}
-```
-
-> 使用 `npx -y` 无需手动安装，每次启动自动拉取最新版本。
+> `setup` 自动写入 MCP 配置，`npx` 每次启动拉取最新版本，**零手动维护**。
 
 **能做什么**：
 
@@ -187,7 +175,8 @@ npx skills add @nianyi778/skill-jira-defect-analysis
 ## 六、快速上手（5 分钟）
 
 ```bash
-# Step 1: 登录 MCP（无需全局安装）
+# Step 1: 安装并注册 MCP（自动写入 Claude Code 配置）
+npx jira-dev-mcp setup
 npx jira-dev-mcp login
 
 # Step 2: 安装 Skill
