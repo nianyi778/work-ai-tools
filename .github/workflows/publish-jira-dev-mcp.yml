@@ -33,7 +33,7 @@ jobs:
         run: npm ci
 
       - name: Bump version from tag
-        run: npm version ${{ steps.meta.outputs.version }} --no-git-tag-version
+        run: npm version ${{ steps.meta.outputs.version }} --no-git-tag-version --allow-same-version
 
       - name: Generate built-in credentials
         run: node scripts/generate-defaults.js
