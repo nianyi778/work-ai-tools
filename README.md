@@ -111,14 +111,23 @@ The publish workflow (`mcps/{name}/.github/workflows/publish.yml`) uses `default
 
 ---
 
-## Local Setup
+## 安装
+
+### 给人类看的
+
+复制以下提示词，粘贴到你的 LLM Agent（Claude Code、Cursor 等）：
+
+```
+请按照这里的说明安装 work-ai-tools 环境：
+https://raw.githubusercontent.com/nianyi778/work-ai-tools/main/SETUP.md
+```
+
+或者你也可以直接阅读 [安装指南](./SETUP.md)，但说真的，让 Agent 去干吧。人类配环境总是容易敲错字母。
+
+### 给 LLM Agent 看的
+
+获取安装指南并照做：
 
 ```bash
-git clone git@github.com:nianyi778/work-ai-tools.git ~/personage/work-ai-tools
-
-# symlink a skill (no npm needed locally)
-ln -s ~/personage/work-ai-tools/skills/jira-defect-analysis/skills/jira-defect-analysis \
-      ~/.claude/skills/jira-defect-analysis
-
-# MCP: see mcps/jira-dev-mcp/README.md
+curl -s https://raw.githubusercontent.com/nianyi778/work-ai-tools/main/SETUP.md
 ```
