@@ -3,7 +3,7 @@ name: Publish jira-dev-mcp to npm
 on:
   push:
     tags:
-      - 'jira-dev-mcp-v*'
+      - 'jira-dev-mcp-v*'   # e.g. jira-dev-mcp-v1.4.7
 
 defaults:
   run:
@@ -17,6 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Extract version from tag
+        id: meta
+        run: |
+          TAG="${GITHUB_REF_NAME}"               # jira-dev-mcp-v1.4.7
+          VERSION="${TAG##*-v}"                  # 1.4.7
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -24,6 +31,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Bump version from tag
+        run: npm version ${{ steps.meta.outputs.version }} --no-git-tag-version
 
       - name: Generate built-in credentials
         run: node scripts/generate-defaults.js

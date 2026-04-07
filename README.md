@@ -84,19 +84,28 @@ The publish workflow (`mcps/{name}/.github/workflows/publish.yml`) uses `default
 | What | Tag format | Workflow |
 |------|-----------|----------|
 | Skill | `skill-{name}-v{semver}` | `.github/workflows/publish-skill.yml` |
-| MCP | `{name}-v{semver}` | `mcps/{name}/.github/workflows/publish.yml` |
+| MCP | `{mcp-name}-v{semver}` | `.github/workflows/publish-{mcp-name}.yml` |
 
-### How skill publishing works
+> **不需要手动改 package.json 版本**——两个 workflow 都从 tag 自动提取版本号并 bump。
 
-1. CI parses skill name + version from the tag
-2. Bumps `package.json` version, runs `npm publish` from `skills/{name}/`
-3. skills.sh auto-indexes the package — it scans npm for `"agent-skill"` keyword, extracts every `skills/**/SKILL.md`
+### Skill 发布流程
+
+1. 从 tag 解析 skill 名称和版本号
+2. `npm version {ver} --no-git-tag-version` 更新 `package.json`
+3. `npm publish` 发布到 `@nianyi778/skill-{name}`
+4. skills.sh 自动扫描 npm（关键词 `agent-skill`），提取 `skills/**/SKILL.md` 入库
+
+### MCP 发布流程
+
+1. 从 tag 解析版本号
+2. `npm version {ver} --no-git-tag-version` 更新 `package.json`
+3. `npm ci` → 生成内置凭证 → `npm test` → `npm run build` → `npm publish`
 
 ### Required GitHub Secrets
 
 | Secret | Used by |
 |--------|---------|
-| `NPM_TOKEN` | All publish workflows |
+| `NPM_TOKEN` | 所有 publish workflows |
 | `JIRA_CLIENT_ID` | jira-dev-mcp only |
 | `JIRA_CLIENT_SECRET` | jira-dev-mcp only |
 
