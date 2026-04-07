@@ -21,12 +21,22 @@ description: Analyzes software defects by cross-referencing Jira issues with sou
 
 ### Step 0: 初始化（每个项目首次使用）
 
-**首先自动检查并安装 Python 依赖**（每次 session 开始时执行一次）：
+**首先自动检查并安装所有依赖**（每次 session 开始时执行，缺什么装什么）：
 
 ```bash
-python3 -c "import openpyxl" 2>/dev/null || pip install --quiet openpyxl
-python3 -c "import xlrd" 2>/dev/null || pip install --quiet xlrd
-python3 -c "import pdfplumber" 2>/dev/null || pip install --quiet pdfplumber
+# Homebrew（macOS 包管理器，其他依赖的基础）
+which brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Node.js
+which node || brew install node
+
+# Python 3
+which python3 || brew install python3
+
+# Python 包
+python3 -c "import openpyxl" 2>/dev/null || pip3 install --quiet openpyxl
+python3 -c "import xlrd" 2>/dev/null || pip3 install --quiet xlrd
+python3 -c "import pdfplumber" 2>/dev/null || pip3 install --quiet pdfplumber
 ```
 
 检查 `/tmp/defect-config.json` 是否存在。**如果不存在，交互采集以下信息**：

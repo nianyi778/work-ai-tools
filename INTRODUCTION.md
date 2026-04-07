@@ -4,18 +4,15 @@
 
 ---
 
-## 零、前置依赖（新用户必看）
+## 零、前置依赖
 
-| 依赖 | 用途 | 安装 |
-|------|------|------|
-| **Node.js >= 18.3** | 运行 jira-dev-mcp | [nodejs.org](https://nodejs.org) |
-| **Python 3.x** | 解析 Excel/PDF 附件 | `brew install python` |
-| **openpyxl** | skill 内解析 Excel 附件 | `pip install openpyxl` |
-| **xlrd + pdfplumber** | MCP 内解析 XLS/PDF | `pip install xlrd pdfplumber` |
-| **Claude Code** | AI 编辑器（MCP 客户端 + Skill 宿主） | `npm install -g @anthropic-ai/claude-code` |
-| **Google Docs MCP** | skill 回填 Google Sheet | Claude Code 内配置 |
+| 依赖 | 安装方式 |
+|------|---------|
+| **Claude Code** | 唯一需要手动安装的，见 [claude.ai/code](https://claude.ai/code) |
+| Node.js / Python / pip 包 | **AI 自动检查并安装**，无需手动操作 |
+| Google Docs MCP | Claude Code 内配置（首次使用 skill 时 AI 会提示） |
 
-> **一次性检查命令**：`npx jira-dev-mcp doctor` — 自动验证 Node/Python/OAuth 是否就绪。
+> 安装好 Claude Code 后，直接说"处理缺陷单"——AI 会检测缺什么、装什么，全程自动。
 
 ---
 
