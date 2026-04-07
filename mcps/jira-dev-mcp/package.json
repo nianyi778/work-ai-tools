@@ -1,6 +1,6 @@
 {
   "name": "jira-dev-mcp",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Local MCP server for Jira Cloud-driven development workflows",
   "type": "module",
   "main": "dist/index.js",

@@ -145,7 +145,7 @@ jira_search_issues(query: "project = AT AND sprint in openSprints()")
 **第 3 步 — 读取任务详情**
 
 ```
-jira_read_task(key: "AT-123", includeComments: true)
+jira_read_task(input: "AT-123", includeComments: true)
 ```
 
 返回：描述、子任务、变更记录、评论、附件列表，以及本地仓库路径。

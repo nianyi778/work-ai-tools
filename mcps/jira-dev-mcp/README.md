@@ -170,7 +170,7 @@ jira_search_issues(query: "project = AT AND sprint in openSprints()")
 **Step 3 — Read the task**
 
 ```
-jira_read_task(key: "AT-123", includeComments: true)
+jira_read_task(input: "AT-123", includeComments: true)
 ```
 
 Returns: description, subtasks, changelog, comments, attachment list, and the local repo path.

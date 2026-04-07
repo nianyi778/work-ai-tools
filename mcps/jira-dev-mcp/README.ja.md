@@ -145,7 +145,7 @@ jira_search_issues(query: "project = AT AND sprint in openSprints()")
 **ステップ 3 — タスク詳細を読み込む**
 
 ```
-jira_read_task(key: "AT-123", includeComments: true)
+jira_read_task(input: "AT-123", includeComments: true)
 ```
 
 返却内容：説明、サブタスク、変更履歴、コメント、添付ファイル一覧、ローカルリポジトリパス。
